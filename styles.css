@@ -167,8 +167,13 @@
        DISPLAY LOGIC (Screen vs Print)
        ======================================================= */
     @media screen {
-         .sheet-container { display: none !important; }
+        .sheet-container { display: none !important; }
     }
+	
+	@page {
+        size: landscape;
+    }
+	
     @media print {
         body { padding: 0; background-color: #fff; }
         .form-container { display: none !important; }
