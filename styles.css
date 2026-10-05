@@ -170,9 +170,7 @@
         .sheet-container { display: none !important; }
     }
 	
-	@page {
-        size: landscape;
-    }
+	
 	
     @media print {
         body { padding: 0; background-color: #fff; }
@@ -186,4 +184,7 @@
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
+		@page {
+        size: landscape;
+    }
     }
