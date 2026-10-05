@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOG-RISK ASSESSMENT SHEET</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+        color: #000;
+        margin: 0;
+        padding: 20px;
+        background-color: #fff;
+    }
+    
+    /* =======================================================
+       FORM STYLES (Screen only)
+       ======================================================= */
+    .form-container {
+        max-width: 100%;
+        margin: 0 auto 30px auto;
+        padding: 20px;
+        background: #f9f9f9;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-width: 150px;
+    }
+    .form-group label {
+        font-weight: 900;
+        font-size: 12px;
+        margin-bottom: 5px;
+        color: #333;
+    }
+    .form-group input, .form-group select {
+        padding: 8px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .print-btn {
+        background-color: #0056b3;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        font-size: 14px;
+        font-weight: 900;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s;
+        margin-top: 15px;
+    }
+    .print-btn:hover {
+        background-color: #004494;
+    }
+
+    /* =======================================================
+       SHEET STYLES
+       ======================================================= */
+    .sheet-container {
+        max-width: 100dvw;
+        margin: 0 auto;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 8px;
+    }
+    th, td {
+        border: 1px solid #000;
+        padding: 2px 4px;
+        vertical-align: middle;
+    }
+    
+    /* Header Table Styles */
+    .header-table {
+        border: 2px solid #000;
+    }
+    .header-table td {
+        border: 1px solid #000;
+    }
+    .header-title {
+        font-size: 18px;
+        font-weight: 900;
+        text-decoration: underline;
+        text-align: center;
+        letter-spacing: 1px;
+    }
+    .header-subtitle {
+        font-size: 15px;
+        font-weight: 900;
+        font-style: italic;
+        text-align: center;
+    }
+    .logo-cell {
+        text-align: center;
+        width: 10%;
+        border-right: 2px solid #000 !important;
+    }
+    .logo-cell img {
+        max-height: 80px;
+        object-fit: contain;
+    }
+
+    /* Main Table Styles */
+    .main-table {
+        border: 2px solid #000;
+    }
+    .main-table thead th {
+        background-color: #faebd7; /* Light tan */
+        font-weight: 900;
+        text-align: center;
+    }
+    .main-table thead .blue-header {
+        background-color: #B6DDE8; /* Light cyan/blue */
+    }
+    .highlight-yellow {
+        background-color: #ffff00;
+    }
+    .highlight-blue {
+        background-color: #00b0f0;
+        color: #000;
+    }
+    .highlight-orange {
+        background-color: #fce4d6;
+    }
+    .action-items {
+        text-align: left;
+        vertical-align: top;
+        padding-left: 8px;
+    }
+    
+    /* Footer Section Styles */
+    .footer-notes {
+        border: 2px solid #000;
+    }
+    .footer-notes td {
+        border: 1px solid #000;
+        background-color: #EAF1DD;
+    }
+    .overall-rating-title {
+        background-color: #f2f2f2 !important;
+        font-weight: 900;
+        font-variant: small-caps;
+        text-align: center;
+        width: 12%;
+    }
+    .gray-text-bg {
+        background-color: #d9d9d9;
+        font-weight: 900;
+    }
+    
+    /* Signatures Table Styles */
+    .signatures-table {
+        border: 2px solid #000;
+        border-top: none; /* Connect to the notes table */
+    }
+    .signatures-table td {
+        border: 1px solid #000;
+        width: 25%;
+    }
+    .signatures-header {
+        background-color: #d9d9d9;
+        font-weight: 900;
+        text-align: center;
+        text-transform: uppercase;
+    }
+    .signature-row {
+        font-weight: 900;
+    }
+
+    /* Bottom Labels */
+    .bottom-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: #777;
+        margin-top: 5px;
+    }
+
+    /* =======================================================
+       PRINT MEDIA QUERY (Hides the form when printing)
+       ======================================================= */
+    @media print {
+        body { padding: 0; }
+        .form-container { display: none !important; }
+        .sheet-container { max-width: 100%; margin: 0; }
+        /* Ensure background colors are printed */
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+    }
+</style>
+</head>
+<body>
+
+<!-- INPUT FORM (Hidden when printing) -->
+<div class="form-container">
+    <div class="form-group">
+        <label for="input-wo">W.O #</label>
+        <input type="text" id="input-wo" value="8201316" placeholder="Enter W.O #">
+    </div>
+    
+    <div class="form-group">
+        <label for="input-item">ITEM #</label>
+        <input type="text" id="input-item" value="50-620-KE003B" placeholder="Enter ITEM #">
+    </div>
+    
+    <div class="form-group">
+        <label for="input-area">AREA</label>
+        <input type="text" id="input-area" value="F2" placeholder="Enter AREA">
+    </div>
+
+    <div class="form-group">
+        <label for="input-type">ACTIVITY TYPE</label>
+        <select id="input-type">
+            <option value="ERECT SCAFFOLDING">Erect Scaffolding</option>
+            <option value="REMOVE SCAFFOLDING">Remove Scaffolding</option>
+            <option value="FIX BACK INSULATION">Fix Back Insulation</option>
+            <option value="REMOVE INSULATION">Remove Insulation</option>
+            <option value="TOUCH-UP PAINT">Touch-Up Paint</option>
+            <option value="SANDBLASTING & PAINTING">Sandblasting & Painting</option>
+            <option value="FORKLIFT & TRUCK">Forklift & Truck</option>
+            <option value="INTERNAL CLEANING">Internal Cleaning</option>
+            <option value="TRANSFER CONTAINER">Transfer Container</option>
+        </select>
+    </div>
+
+    <div class="form-group" style="flex: 0; min-width: auto;">
+        <button class="print-btn" onclick="window.print()">Print Sheet</button>
+    </div>
+</div>
+
+<div class="sheet-container">
+    
+    <!-- HEADER SECTION -->
+    <table class="header-table">
+        <tr>
+            <td rowspan="5" class="logo-cell">
+                <img src="https://mellitahog.ly/wp-content/uploads/2024/02/FB_IMG_1707320508695.jpg" alt="Mellitah Oil & Gas Logo">
+            </td>
+            <td colspan="7" rowspan="2" class="header-title" style="border-bottom: none; vertical-align: bottom; padding-top: 15px;">
+                MOG-RISK ASSESSMENT SHEET
+            </td>
+            <td style="width: 18%; font-weight: 900; font-style: italic; text-align: left;">
+                REPORT NO.: PS-K2-01
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: left;font-weight:900;">
+                Rev.: 00
+            </td>
+        </tr>
+        <tr style="text-align: center; font-weight: 900;">
+            <td style="border:none;"></td>
+            <td>DATE:05/10/2026</td>
+            <td>W.P #:<br>C.O</td>
+            <td>AREA:<br><span id="display-area">F2</span></td>
+            <td>ITEM #:<br><span id="display-item">50-620-KE003B</span></td>
+            <td>W.O #:<br><span id="display-wo">8201316</span></td>
+            <td style="border:none;"></td>
+            <td style="font-weight: 900; text-align: left;">
+                INSERT PTW #:
+            </td>
+        </tr>
+        <tr  style="border:none;">
+            <td style="border:none;"></td>
+            
+            <td  style="border:none;" colspan="5" rowspan="2" class="header-subtitle" id="display-type">
+                TO ERECT SCAFFOLDING
+            </td>
+            <td style="border:none;"></td>
+            <td style="font-weight: 900; font-style: italic; text-align: left;">
+                CRAFT:
+            </td>
+            
+        </tr>
+        <tr>
+        <td colspan="7"  style="border:none;"></td>
+            <td style="font-weight: 900; font-style: italic; text-align: left;">
+                REVIEW DUE.
+            </td>
+        </tr>
+    </table>
+
+    <!-- MAIN RISK ASSESSMENT TABLE -->
+    <table class="main-table">
+        <thead>
+            <tr>
+                <th rowspan="2" style="width: 6%;">Event ID</th>
+                <th rowspan="2" style="width: 17%;">Hazard</th>
+                <th rowspan="2" style="width: 10%;">Consequences-<br>Impact</th>
+                <th rowspan="2" style="width: 3%;">Area<br>of<br>Imp<br>act</th>
+                <th rowspan="2" style="width: 15%;">Controls in place</th>
+                <th colspan="3" style="width: 9%;">Current Risk</th>
+                <th style="width: 24%;"><u>Recommended<br>Measures (*)</u></th>
+                <th colspan="2" style="width: 16%;">Measures to be<br>implemented</th>
+            </tr>
+            <tr>
+                <th class="blue-header" style="width: 3%;">Prob.</th>
+                <th class="blue-header" style="width: 3%;">Sev.</th>
+                <th class="blue-header" style="width: 3%;">Risk</th>
+                <th class="blue-header">ACTION ITEM</th>
+                <th class="blue-header" style="width: 8%;">Action<br>assigned</th>
+                <th class="blue-header" style="width: 8%;">Residua<br>l Risk</th>
+            </tr>
+        </thead>
+        <tbody >
+            <tr style="border-left: 3px solid red;">
+                <td style="text-align: left; vertical-align: top;">
+                    <b>1.</b> Scaffold<br>Erection<br>Tools &<br>Materials<br>Manual<br>Handling
+                </td>
+                <td style="text-align: center; vertical-align: top;">
+                    <b>Working at Height, <u>result</u> in<br>loss control & falling,</b><br>
+                    Slip/Trip & Fall<br>Improper handling<br>objects/Dropped load<br><br>
+                    <span class="highlight-yellow">Unstable walking Working<br>Surface /dislocated/ loosen<br>Grating/<br>Opening</span>
+                </td>
+                <td style="text-align: center;">
+                    Physical<br>Harm/ cuts,<br>abrasions<br>Minor injury
+                </td>
+                <td></td>
+                <td style="text-align: center;">
+                    PTW, TBT<br>Manual Handling Procedure<br>Trained Competent<br>Persons<br>Competent, Inducted<br>Personnel & Trained in<br>WAH/Fit to work<br>Appropriate Standardized<br>PPE<br><b>Fall Protection/Inspected<br>Safety Harnesses</b>
+                </td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">B</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">3</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;" class="highlight-yellow">M</td>
+                <td class="action-items">
+                    - Observe proper lifting<br>&nbsp;&nbsp;techniques.<br>
+                    - When in doubt – use the buddy<br>&nbsp;&nbsp;system to move or carry<br>&nbsp;&nbsp;questionable loads.<br>
+                    - Wrist Tie Secure all hand tools<br>
+                    - Personnel shall not exceed<br>&nbsp;&nbsp;their own lifting capabilities, "do<br>&nbsp;&nbsp;not try to impress your<br>&nbsp;&nbsp;colleagues".<br>
+                    - Proper positioning of body.
+                </td>
+                <td style="text-align: center;">
+                    Foreman/<br>Worker
+                </td>
+                <td style="text-align: center;" class="highlight-blue">
+                    <b>L.</b><br>Assure<br>Self-<br>Control
+                </td>
+            </tr>
+            <tr>
+                <td colspan="11" class="highlight-orange" style="text-align: center; font-weight: 900; padding: 4px;">
+                    Perform maintenance repair if required depending on inspection findings report (requires other PTW & Activity R.A)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- FOOTER NOTES SECTION -->
+    <table class="footer-notes">
+        <tr>
+            <td class="overall-rating-title">
+                OVERAL RATING
+            </td>
+            <td style="padding-left: 5px;">
+                <span class="gray-text-bg">This task</span> could be Potentially Hazardous especially on Rating Scores <span class="gray-text-bg">of C/S & WAH</span>. Risk Management & Control on these ratings to reduce As Low as Reasonably Practicable. (ALARP)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="padding: 5px;">
+                <b>** Notes for Risk Assessment**</b><br>
+                This task must be <span class="highlight-yellow" style="font-weight: 900;">Re-Assessed</span> when Task Method, Plan and/or Environmental Conditions Change Significantly.<br>
+                Supervisors/Foremen and Operatives Assisted by the HSE must ensure that all Controls Measures are implemented and <u>maintained at all times</u>.
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="padding: 5px; text-align: center;">
+                <b><u>**SUPERVISOR/FOREMAN STATEMENT:</u></b><br>
+                <div style="text-align: left; display: inline-block; width: 100%;">
+                ** I hereby commit myself and the personnel under my responsibility to strictly follow the Safety precautions listed above & PTW Conditions/Restriction, and - in case of any doubt or situation change affecting Safety, Health and Environment - to stop the activities ensuring re-assessment with the relevant parties...
+                </div>
+            </td>
+        </tr>
+    </table>
+    
+    <!-- SIGNATURES SECTION -->
+    <table class="signatures-table">
+        <tr class="signatures-header">
+            <td>ASSESSOR / TS-HSE</td>
+            <td>PERFORMING ATHORITY (P.A)</td>
+            <td>AREA AUTHORITY (A.A)</td>
+            <td>MOG- HSE SITE:</td>
+        </tr>
+        <tr class="signature-row">
+            <td>Name:</td>
+            <td>Name:</td>
+            <td>Name:</td>
+            <td>Name:</td>
+        </tr>
+        <tr class="signature-row">
+            <td>Date:</td>
+            <td>Date:</td>
+            <td>Date:</td>
+            <td>Date:</td>
+        </tr>
+        <tr class="signature-row">
+            <td>Signature:</td>
+            <td>Signature:</td>
+            <td>Signature:</td>
+            <td>Signature:</td>
+        </tr>
+    </table>
+
+    <!-- BOTTOM LABELS -->
+    <div class="bottom-labels">
+        <div>MOG-HSEQ-F-151</div>
+        <div style="font-size: 13px;">Page <b>1</b> of 1</div>
+    </div>
+
+</div>
+
+<!-- JAVASCRIPT FOR REAL-TIME UPDATING -->
+<script>
+    // Elements for Form Inputs
+    const inputWO = document.getElementById('input-wo');
+    const inputItem = document.getElementById('input-item');
+    const inputArea = document.getElementById('input-area');
+    const inputType = document.getElementById('input-type');
+
+    // Elements for Sheet Display
+    const displayWO = document.getElementById('display-wo');
+    const displayItem = document.getElementById('display-item');
+    const displayArea = document.getElementById('display-area');
+    const displayType = document.getElementById('display-type');
+
+    // Add event listeners to update sheet instantly on typing/changing
+    inputWO.addEventListener('input', (e) => {
+        displayWO.textContent = e.target.value || '\u00A0';
+    });
+
+    inputItem.addEventListener('input', (e) => {
+        displayItem.textContent = e.target.value || '\u00A0';
+    });
+
+    inputArea.addEventListener('input', (e) => {
+        displayArea.textContent = e.target.value || '\u00A0';
+    });
+
+    inputType.addEventListener('change', (e) => {
+        displayType.textContent = "TO " + e.target.value;
+    });
+</script>
+
+</body>
+</html>
