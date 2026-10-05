@@ -11,6 +11,11 @@
 <!-- INPUT FORM -->
 <div class="form-container">
     <div class="form-group">
+        <label for="input-date">DATE</label>
+        <input type="date" id="input-date" value="">
+    </div>
+
+    <div class="form-group">
         <label for="input-wo">W.O #</label>
         <input type="text" id="input-wo" value="8201316" placeholder="Enter W.O #">
     </div>
@@ -70,7 +75,7 @@
         </tr>
         <tr style="text-align: center; font-weight: 900;">
             <td style="border:none;"></td>
-            <td>DATE:05/10/2026</td>
+            <td>DATE:<span id="display-date"></span></td>
             <td>W.P #:<br>C.O</td>
             <td>AREA:<br><span id="display-area">F2</span></td>
             <td>ITEM #:<br><span id="display-item">50-620-KE003B</span></td>
@@ -229,12 +234,14 @@
 <!-- JAVASCRIPT FOR REAL-TIME UPDATING -->
 <script>
     // Elements for Form Inputs
+    const inputDate = document.getElementById('input-date');
     const inputWO = document.getElementById('input-wo');
     const inputItem = document.getElementById('input-item');
     const inputArea = document.getElementById('input-area');
     const inputType = document.getElementById('input-type');
 
     // Elements for Sheet Display
+    const displayDate = document.getElementById('display-date');
     const displayWO = document.getElementById('display-wo');
     const displayItem = document.getElementById('display-item');
     const displayArea = document.getElementById('display-area');
@@ -242,7 +249,33 @@
     const mainTbody = document.getElementById('main-tbody');
     const footerRatingText = document.getElementById('footer-rating-text');
 
-    // Add event listeners for text fields
+    // ==========================================
+    // SET DEFAULT DATE TO TOMORROW ON LOAD
+    // ==========================================
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    const yyyy = tomorrow.getFullYear();
+    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+    const dd = String(tomorrow.getDate()).padStart(2, '0');
+    
+    // HTML input value expects YYYY-MM-DD
+    inputDate.value = `${yyyy}-${mm}-${dd}`;
+    // Sheet expects DD/MM/YYYY
+    displayDate.textContent = `${dd}/${mm}/${yyyy}`;
+
+
+    // Add event listeners for text and date fields to update instantly
+    inputDate.addEventListener('input', (e) => {
+        if (e.target.value) {
+            const [y, m, d] = e.target.value.split('-');
+            displayDate.textContent = `${d}/${m}/${y}`;
+        } else {
+            displayDate.textContent = '\u00A0';
+        }
+    });
+
     inputWO.addEventListener('input', (e) => { displayWO.textContent = e.target.value || '\u00A0'; });
     inputItem.addEventListener('input', (e) => { displayItem.textContent = e.target.value || '\u00A0'; });
     inputArea.addEventListener('input', (e) => { displayArea.textContent = e.target.value || '\u00A0'; });
