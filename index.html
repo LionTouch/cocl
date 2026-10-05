@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MOG-RISK ASSESSMENT SHEET</title>
- <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- INPUT FORM (Visible on screen, hidden on print) -->
+<!-- INPUT FORM -->
 <div class="form-container">
     <div class="form-group">
         <label for="input-wo">W.O #</label>
@@ -29,6 +29,7 @@
         <label for="input-type">ACTIVITY TYPE</label>
         <select id="input-type">
             <option value="ERECT SCAFFOLDING">Erect Scaffolding</option>
+            <option value="ERECT INTERNAL SCAFFOLDING">Erect Internal Scaffolding</option>
             <option value="REMOVE SCAFFOLDING">Remove Scaffolding</option>
             <option value="FIX BACK INSULATION">Fix Back Insulation</option>
             <option value="REMOVE INSULATION">Remove Insulation</option>
@@ -41,7 +42,6 @@
     </div>
 
     <div class="form-group" style="flex: 0; min-width: auto;">
-        <!-- Retained the button, but added a note since Google Sites sandbox blocks it -->
         <button class="print-btn" onclick="window.print()">Print Sheet</button>
     </div>
     
@@ -50,7 +50,7 @@
     </div>
 </div>
 
-<!-- RISK ASSESSMENT SHEET (Hidden on screen, visible on print) -->
+<!-- RISK ASSESSMENT SHEET -->
 <div class="sheet-container">
     
     <!-- HEADER SECTION -->
@@ -100,6 +100,7 @@
             </td>
         </tr>
     </table>
+
     <!-- MAIN RISK ASSESSMENT TABLE -->
     <table class="main-table">
         <thead>
@@ -122,12 +123,13 @@
                 <th class="blue-header" style="width: 8%;">Residua<br>l Risk</th>
             </tr>
         </thead>
-        <tbody >
+        <tbody id="main-tbody">
+            <!-- Content defaults to ERECT SCAFFOLDING on load -->
             <tr style="border-left: 3px solid red;">
-                <td style="text-align: left; vertical-align: top;">
+                <td style="text-align: left; vertical-align: middle;">
                     <b>1.</b> Scaffold<br>Erection<br>Tools &<br>Materials<br>Manual<br>Handling
                 </td>
-                <td style="text-align: center; vertical-align: top;">
+                <td style="text-align: center; vertical-align: middle;">
                     <b>Working at Height, <u>result</u> in<br>loss control & falling,</b><br>
                     Slip/Trip & Fall<br>Improper handling<br>objects/Dropped load<br><br>
                     <span class="highlight-yellow">Unstable walking Working<br>Surface /dislocated/ loosen<br>Grating/<br>Opening</span>
@@ -171,7 +173,7 @@
                 OVERAL RATING
             </td>
             <td style="padding-left: 5px;">
-                <span class="gray-text-bg">This task</span> could be Potentially Hazardous especially on Rating Scores <span class="gray-text-bg">of C/S & WAH</span>. Risk Management & Control on these ratings to reduce As Low as Reasonably Practicable. (ALARP)
+                <span class="gray-text-bg">This task</span> could be Potentially Hazardous especially on Rating Scores <span class="gray-text-bg" id="footer-rating-text">of C/S & WAH</span>. Risk Management & Control on these ratings to reduce As Low as Reasonably Practicable. (ALARP)
             </td>
         </tr>
         <tr>
@@ -240,22 +242,267 @@
     const displayItem = document.getElementById('display-item');
     const displayArea = document.getElementById('display-area');
     const displayType = document.getElementById('display-type');
+    const mainTbody = document.getElementById('main-tbody');
+    const footerRatingText = document.getElementById('footer-rating-text');
 
-    // Add event listeners to update hidden sheet instantly on typing/changing
-    inputWO.addEventListener('input', (e) => {
-        displayWO.textContent = e.target.value || '\u00A0';
-    });
+    // Add event listeners for text fields
+    inputWO.addEventListener('input', (e) => { displayWO.textContent = e.target.value || '\u00A0'; });
+    inputItem.addEventListener('input', (e) => { displayItem.textContent = e.target.value || '\u00A0'; });
+    inputArea.addEventListener('input', (e) => { displayArea.textContent = e.target.value || '\u00A0'; });
 
-    inputItem.addEventListener('input', (e) => {
-        displayItem.textContent = e.target.value || '\u00A0';
-    });
+    // Database mapping dropdown values to exact Titles and HTML rows based on the screenshots
+    const activityData = {
+        "ERECT SCAFFOLDING": {
+            title: "TO ERECT SCAFFOLDING",
+            footerScore: "of C/S & WAH",
+            html: `
+            <tr style="border-left: 3px solid red;">
+                <td style="text-align: left; vertical-align: middle;"><b>1.</b> Scaffold<br>Erection<br>Tools &<br>Materials<br>Manual<br>Handling</td>
+                <td style="text-align: center; vertical-align: middle;"><b>Working at Height, <u>result</u> in<br>loss control & falling,</b><br>Slip/Trip & Fall<br>Improper handling<br>objects/Dropped load<br><br><span class="highlight-yellow">Unstable walking Working<br>Surface /dislocated/ loosen<br>Grating/<br>Opening</span></td>
+                <td style="text-align: center;">Physical<br>Harm/ cuts,<br>abrasions<br>Minor injury</td>
+                <td></td>
+                <td style="text-align: center;">PTW, TBT<br>Manual Handling Procedure<br>Trained Competent<br>Persons<br>Competent, Inducted<br>Personnel & Trained in<br>WAH/Fit to work<br>Appropriate Standardized<br>PPE<br><b>Fall Protection/Inspected<br>Safety Harnesses</b></td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">B</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">3</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;" class="highlight-yellow">M</td>
+                <td class="action-items">- Observe proper lifting<br>&nbsp;&nbsp;techniques.<br>- When in doubt – use the buddy<br>&nbsp;&nbsp;system to move or carry<br>&nbsp;&nbsp;questionable loads.<br>- Wrist Tie Secure all hand tools<br>- Personnel shall not exceed<br>&nbsp;&nbsp;their own lifting capabilities, "do<br>&nbsp;&nbsp;not try to impress your<br>&nbsp;&nbsp;colleagues".<br>- Proper positioning of body.</td>
+                <td style="text-align: center;">Foreman/<br>Worker</td>
+                <td style="text-align: center;" class="highlight-blue"><b>L.</b><br>Assure<br>Self-<br>Control</td>
+            </tr>
+            <tr>
+                <td colspan="11" class="highlight-orange" style="text-align: center; font-weight: 900; padding: 4px;">Perform maintenance repair if required depending on inspection findings report (requires other PTW & Activity R.A)</td>
+            </tr>`
+        },
+        "ERECT INTERNAL SCAFFOLDING": {
+            title: "ERECT INTERNAL SCAFFOLDING",
+            footerScore: "of Confined Space Type & nature of the Activity",
+            html: `
+            <tr style="border-left: 3px solid red;">
+                <td style="text-align: left; vertical-align: middle;"><b>1.</b> Internal Scaffold<br>Erection Tools &<br>Materials Manual<br>Handling</td>
+                <td style="text-align: center; vertical-align: middle;">• Insufficient oxygen<br>atmospheres<br>•<br>Working at Height,<br>result in loss control &<br>falling,<br><br><b>Dropped<br>Load/objects when<br>lowering<br>Tubes/Blanks,</b></td>
+                <td style="text-align: center;">Serious Injury,<br>Inhalation -<br>Potential fatality</td>
+                <td style="text-align: center; font-weight: 900;">P.</td>
+                <td style="text-align: center;">• PTW Procedure - MOS, Toolbox talk -<br>Gas Testing<br>• MOG-Confined space procedure<br>/Scaffolding procedure,<br>•Hole<br>Watch/Standby Natural / Forced air<br>ventilation /air mover-<br>• Appropriate/suitable PPE –<br>Restricted access / egress<br>Emergency response Plan</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">B</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">4</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;" class="highlight-yellow">M</td>
+                <td class="action-items">• Frequent Atmosphere Gas test at least 2 per<br>Shift,<br><br><span style="color:red; font-weight:900;">No entry <u>to</u> be made unless atmosphere is<br>proved to be of breathable quality.</span><br><br>• Scaffold to be secured at suitable anchoring<br><span style="color:red; font-weight:900;">• Confirm Employees Fit to Work</span><br><b>Lighting should be in suitable position as not<br>to blind employees inside confined space.</b><br><span style="color:red;">**</span><b>Entrants know the hazards that may be faced<br>during entry including information on the<br>mode, signs or symptoms and consequences<br>of exposure.</b><br>• Direct means of communication (<u>auditory) to</u><br>be 100% maintained between workers in<br>confined space and “hole watch”,<br>Wrist Tie Secure all hand tools</td>
+                <td style="text-align: center;">Foreman-<br>workers/HSE</td>
+                <td style="text-align: center;" class="highlight-blue"><b>L.</b><br><span style="background-color:yellow; font-size:9px; padding:2px; display:inline-block;">Reinforce control<br>measure<br>/recommendations<br>depending on<br>internal<br>atmosphere<br>assessment /</span></td>
+            </tr>
+            <tr>
+                <td colspan="11" class="highlight-orange" style="text-align: center; font-weight: 900; padding: 4px;">Perform maintenance repair if required depending on inspection findings report (requires other PTW & Activity R.A)</td>
+            </tr>`
+        },
+        "REMOVE SCAFFOLDING": {
+            title: "TO REMOVE SCAFFOLDING",
+            footerScore: "of C/S & WAH",
+            html: `
+            <tr style="border-left: 3px solid red;">
+                <td style="text-align: center; vertical-align: middle;"><b>1.</b> Dismantling<br>Scaffold</td>
+                <td style="text-align: center; vertical-align: middle;">• Insufficient oxygen atmospheres<br>• Working at Height, result in loss<br>control & falling,<br><br>Dropped Load/objects when<br>lowering Tubes/Blanks<br><br><span class="highlight-yellow">Unstable walking Working Surface<br>/dislocated/ loosen Grating/<br>Opening</span></td>
+                <td style="text-align: center;">Harm to<br>person,<br>Serious<br>Injury,<br>Inhalation</td>
+                <td style="text-align: center; font-weight: 900;">P.</td>
+                <td style="text-align: center;">• PTW Procedure - MOS,<br>Toolbox talk - Gas<br>• MOG-Confined space<br>procedure /Scaffolding<br>procedure,<br>•Hole Watch/Standby<br>Natural / Forced air<br>ventilation /air mover-<br>• Restricted access /<br>egress<br>• Appropriate/suitable PPE<br>–<br>Emergency response Pla</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">B</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">3</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;" class="highlight-yellow">M</td>
+                <td class="action-items" style="text-align:center;">Frequent Atmosphere<br>Gas test at least 2 per<br>Shift,<br><ul><li>Ensure Gas Free<br>atmosphere<br>including potential<br>pocket gas presence</li><li>Full body Safety<br>Harness</li></ul></td>
+                <td style="text-align: center;">Foreman/<br>Workers/H<br>SE</td>
+                <td style="text-align: center;" class="highlight-blue"><b>L.</b><br><span style="background-color:yellow; font-size:9px; padding:2px;">Reinforce<br>SELF<br>control<br>measures</span></td>
+            </tr>`
+        },
+        "FIX BACK INSULATION": {
+            title: "TO FIX BACK INSULATION",
+            footerScore: "of C/S & WAH",
+            html: `
+            <tr style="border-left: 3px solid red;">
+                <td style="text-align: center; vertical-align: middle;"><b>1.</b> Install of<br>Thermal<br>Insulation</td>
+                <td style="text-align: center; vertical-align: middle;">Incorrect use of hand tools;<br>/Sharp edges <u>slips,</u>/trip Hot Surface<br><span class="highlight-yellow">Unstable walking Working Surface /dislocated/<br>loosen Grating/<br>Opening</span></td>
+                <td style="text-align: center;">Hands and<br>finger<br>injuries/<br>Lacerations<br>Burns</td>
+                <td style="text-align: center; font-weight:900;">P.</td>
+                <td style="text-align: center;">PTW – TBT<br>Trained Competent<br><u>persons</u> -<br>Standardized<br>PPE/Hand Protection</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">B</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">2</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;" class="highlight-blue">L</td>
+                <td class="action-items" style="text-align:center;">Correct Type of Hand<br>Tools that fit for the job.<br><br>Use thermal appropriate<br>Gloves (if required to<br>prevent burn from hot<br>surface contact)</td>
+                <td style="text-align: center;">Foreman/<br>Workers</td>
+                <td style="text-align: center; font-weight:900;" class="highlight-blue">L</td>
+            </tr>
+            <tr>
+                <td colspan="11" class="highlight-orange" style="text-align: center; font-weight: 900; padding: 4px;">Perform maintenance repair if required depending on inspection findings report (requires other PTW & Activity R.A)</td>
+            </tr>`
+        },
+        "REMOVE INSULATION": {
+            title: "REMOVE INSULATION",
+            footerScore: "of C/S & WAH",
+            html: `
+            <tr>
+                <td colspan="11" class="highlight-yellow" style="padding:4px;"><b>Activity: **This Risk Assessment is based on the assumption that the <span style="color:red">SRU.3 “K2” is Shutdown & associated lines/items Process/electrical isolated/depressurised & <u>Purged</u>/</span></b></td>
+            </tr>
+            <tr style="border-left: 3px solid red;">
+                <td style="text-align: center; vertical-align: middle;"><b>1.</b> Remove<br>Thermal<br>Insulation</td>
+                <td style="text-align: center; vertical-align: middle;">Incorrect use of<br>hand tools; /Sharp edges<br><u>slips,</u>/trip Hot Surface<br><span class="highlight-yellow">Unstable walking Working<br>Surface /dislocated/ loosen<br>Grating/Opening</span></td>
+                <td style="text-align: center;">Hands and<br>finger injuries/<br>Lacerations<br><br>Burns</td>
+                <td style="text-align: center; font-weight:900;">P.</td>
+                <td style="text-align: center;">PTW – TBT<br>Trained Competent<br><u>persons</u> - Standardized<br>PPE/Hand Protection</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">B</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">2</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;" class="highlight-blue">L</td>
+                <td class="action-items" style="text-align:center;">Correct Type of Hand Tools<br>that fit for the job.<br><br>Use thermal appropriate<br>Gloves (if required to<br>prevent burn from hot<br>surface contact)</td>
+                <td style="text-align: center;">Foreman/<br>Workers</td>
+                <td style="text-align: center; font-weight:900;" class="highlight-blue">L</td>
+            </tr>
+            <tr>
+                <td colspan="11" class="highlight-orange" style="text-align: center; font-weight: 900; padding: 4px;">Perform maintenance repair if required depending on inspection findings report (requires other PTW & Activity R.A)</td>
+            </tr>`
+        },
+        "TOUCH-UP PAINT": {
+            title: "TO PERFORM TOUCH-UP PAINT",
+            footerScore: "of WAH, Crane Lifting",
+            html: `
+            <tr>
+                <td colspan="11" class="highlight-yellow" style="padding:4px;"><b>Activity: <span style="color:red">**</span>This Risk Assessment is based on the assumption that the </b></td>
+            </tr>
+            <tr>
+                <td style="text-align: center; vertical-align: middle;">To perform<br>Touch-up <u>and<br>painting</u> <u>acivity</u></td>
+                <td style="text-align: center; vertical-align: middle;">Fire, Explosion,<br>Oxygen lack<br>slips, trips and <u>fall<br>down,</u><br>hand tools, noise<br><br><span class="highlight-yellow">Unstable walking<br>Working Surface<br>/dislocated/ loosen<br>Grating/<br>Opening</span></td>
+                <td style="text-align: center;">PEOPLE,<br>ASSETS</td>
+                <td style="text-align: center;">L1</td>
+                <td style="text-align: center;">Tool Box talk, Gas <u>tes,</u><br>MSDS for paint: ENI to provide<br>Gas detector, Oxygen detector<br>Gas detector, Oxygen detector</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">C</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">3</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;" class="highlight-yellow">M</td>
+                <td class="action-items" style="text-align:center;">Std PPE, Half face <u>mask,Fire</u><br>extinguisher<br>Explosion-proof tools / equipment<br><u>dispoasal</u> cover-all, <u>corden</u> Area<br>PPE:<br>standard + Harness, Painter mask,<br>Rescue rope</td>
+                <td style="text-align: center;">Performing<br>authority<br>Performing<br>authority<br>HSE<br>survey</td>
+                <td style="text-align: center;" class="highlight-blue">Injury,<br>Inhalation<br>Injury,<br>fall,<br>Epoxy<br><u>vapours</u><br>Injury,<br>Load's fall<br>Injury</td>
+            </tr>
+            <tr>
+                <td colspan="11" style="background-color: #f2dcdb; color: #c00000; text-align: center; font-weight: 900; padding: 4px;">ENSURE HOUSEKEEPING / KEEP THE AREA CLEAN</td>
+            </tr>`
+        },
+        "SANDBLASTING & PAINTING": {
+            title: "TO CARRY OUT SAND BLASTING",
+            footerScore: "of WAH, Crane Lifting",
+            html: `
+            <tr>
+                <td colspan="11" class="highlight-yellow" style="padding:4px;"><b>Activity: <span style="color:red">**</span>This Risk Assessment is based on the assumption that the </b></td>
+            </tr>
+            <tr>
+                <td style="text-align: center; vertical-align: middle;">SANDBLASTING<br>ACTIVITIES</td>
+                <td style="text-align: center; vertical-align: middle;">Inhalation, Fire<br><u>breack</u> out, High<br>pressure,<br>Dust/Noise<br>environment,</td>
+                <td style="text-align: center;">Human<br>minor/ major<br>injuries,<br>Health<br>effects,<br>Damages<br>equipment &<br>properties</td>
+                <td style="text-align: center;"><b>Forman,<br>Pipe GRP<br><u>technician<br>assesstant</u><br>with<br>Helpers</b></td>
+                <td style="text-align: center;">Obtain PTW, Gas test<br><u>perform,</u><br>Close supervision, implement<br>grounding system, Fire<br>extinguisher <u>near by,</u><br>Surround workplace with<br>warning tape</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">C</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">3</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;" class="highlight-yellow">M</td>
+                <td class="action-items" style="text-align:center;">Competent & skilled workers, Close<br>supervision<br>Full PPE, H2S Detectors & Scape<br>masks are mandatory, safety belts<br>important</td>
+                <td style="text-align: center;">Performing<br>Authority,<br>HSE<br>Department</td>
+                <td style="text-align: center; font-weight:900;" class="highlight-blue">Body<br>parts<br>injuries/<br>MOG-<br>Properties<br>damages</td>
+            </tr>
+            <tr>
+                <td colspan="11" style="background-color: #f2dcdb; color: #c00000; text-align: center; font-weight: 900; padding: 4px;">ENSURE HOUSEKEEPING / KEEP THE AREA CLEAN</td>
+            </tr>`
+        },
+        "FORKLIFT & TRUCK": {
+            title: "TO USE FORKLIFT AND TRUCK FOR CLEANING",
+            footerScore: "of WAH, Crane Lifting",
+            html: `
+            <tr>
+                <td style="text-align: center; vertical-align: middle;">use the forklift/<br>truck for<br>transfer <u>wast</u></td>
+                <td style="text-align: center; vertical-align: middle;">load, Speeding<br>Cross roads,<br>Traffic Accidents</td>
+                <td style="text-align: center;">Major injury<br>and<br>damages-<br>falling<br>Material-<br>Lack of<br>driver</td>
+                <td style="text-align: left;"><b>P - people<br>A - assets</b></td>
+                <td style="text-align: center;">Gas Test, MSDS, certified<br><u>forklift,secure area,cordoned</u><br>area -Speeds Limit</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">B</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">3</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;" class="highlight-yellow">M</td>
+                <td class="action-items" style="text-align:center;"><u>Stnd</u> PPE, secure Area, banks man,<br>plastic sheet if <u>required,guideline,</u><br>Fire <u>Extingusher</u></td>
+                <td style="text-align: center;">Foreman,<br>HSE<br>survey</td>
+                <td style="text-align: center; font-weight:900;" class="highlight-blue">Body<br>parts<br>injuries/<br>MOG-<br>Properties<br>damages</td>
+            </tr>
+            <tr>
+                <td colspan="11" style="background-color: #f2dcdb; color: #c00000; text-align: center; font-weight: 900; padding: 4px;">ENSURE HOUSEKEEPING / KEEP THE AREA CLEAN</td>
+            </tr>`
+        },
+        "TRANSFER CONTAINER": {
+            title: "TRANSFER CONTAINER FROM JTS TO MAINTENANCE YARD",
+            footerScore: "of C/S & WAH",
+            html: `
+            <tr>
+                <td colspan="11" class="highlight-yellow" style="padding:4px;"><b>Activity: <span style="color:red">**</span>This Risk Assessment is based on the assumption that the </b></td>
+            </tr>
+            <tr>
+                <td style="text-align: center; vertical-align: middle;">Mobilization,<br>Access to<br>Location/Site<br>preparation</td>
+                <td style="text-align: center; vertical-align: middle;">Improper<br>access/Egress<br>Wet Surface Slip/Trip<br>Manual Handling<br>Vehicle<br>movement/traffic<br>Mechanical<br>Failure/Loss of control<br>result in<br>collision/impact.<br>Unqualified<br>Driver/Operator</td>
+                <td style="text-align: center;">Personnel injury<br>Damage to Asset</td>
+                <td style="text-align: center;">P. A</td>
+                <td style="text-align: center;">Completed PTW<br>TBT, TRA delivery & Permit<br>Restriction/Condition /<br>Competent & Inducted Personnel<br><b>Gas Testing (MOG)</b><br>MOG Speed Limit Policy<br>Competent, Licenced & Certified Operator<br>Emergency Response Plan</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">B</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">3</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;" class="highlight-yellow">M</td>
+                <td class="action-items" style="text-align:center;">Parking of the vehicles at Safe & Designated<br>Parking Area<br><br><b>Ensure Restricted authorised persons<br>Access only</b><br><br><span style="color:red;">➢</span> <span style="background-color:orange;">Conduct Safety <u>Standown</u> with all<br>involved personnel & Communicate the<br>associated hazards, control<br>measures/ safeguards and mitigation</span></td>
+                <td style="text-align: center;">Driver/<br>HSE</td>
+                <td style="text-align: center; font-weight:900;" class="highlight-blue">L.<br>Slip/trip &<br>Fall</td>
+            </tr>
+            <tr style="border-left: 3px solid red;">
+                <td style="text-align: center; vertical-align: middle;">Hoisting –Lowering<br>& Shifting up<br>Handrails using<br>Telescopic Crane</td>
+                <td style="text-align: center; vertical-align: middle;">Working at Height<br><br>Unbalanced<br>/suspended load,<br>improper lifting gear<br>capacity (SWL) result<br>in load slip, drop,<br><br>Mechanical failure<br><u>result</u> in Load falling /<br>Collision with asset<br>structure<br><br>Caught in between<br>load swing, contact<br>with person's/asset<br>items (being struck by<br>the load)<br><br>sling fails result in<br>Load falling on,<br><br>Dropped Objects<br>Unbalanced load</td>
+                <td style="text-align: center;">Major Injury, Potential<br>Fatality<br><br>Physical injury (Struck<br>by hoisted load),<br><br>Damage to<br>equipment/ Property</td>
+                <td style="text-align: center;">P.A</td>
+                <td style="text-align: center;">PTW,<br>Gas Test,<br><b>Specific Lifting Hoisting Toolbox Talk</b><br>Lifting Plan<br>Competent /Qualified Crane Operator<br>Banks-man<br>Work @ Height Procedure<br>Inducted/Competent personnel<br>Appropriate/standardized PPE<br>Barricaded zone/Signs displayed<br>Emergency Response</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">B</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">3</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;" class="highlight-yellow">M</td>
+                <td class="action-items"><ul><li>Assess the Crane Layout Location<br>according to Lifting Plan prior to Positioning,<br>adjacent installations shall be taken <u>in</u><br>consideration when rotating <b><u>(Blank test<br>may be required) I</u></b><u>ncluding</u> surface/Paving<br>Condition</li></ul><b>Close & <u>full time</u> competent Supervision<br>presence</b><br><span style="color:red; text-align:center; display:block;">Establishing Suitable Communication mean<br>and only the designated signaler shall give<br>signal to the Crane Operator (consider B</span><ul><li><b>Pre-use lift equipment inspection</b></li></ul>Correct selection and rated lifting accessories<br>(Chain blocks/Sling)<br><ul><li>Ensure the load is adequately secured<br>when shifting-up/lowering & Guide-rope to<br>prevent balancing/swing,|</li></ul>Barricades and warning signs in place at the<br>ground <u>Level area</u> alerting potential dropped<br>objects.<br><b><span style="color:red;">Any movement/maneuvering of the Crane<br>shall be assisted by Spotter /Banks-man</span></b></td>
+                <td style="text-align: center;">Foreman/workers/<br>Site-HSE</td>
+                <td style="text-align: center; font-weight:900;" class="highlight-blue">L.<br>Slip/Trip</td>
+            </tr>`
+        },
+        "INTERNAL CLEANING": {
+            title: "Internal Cleaning",
+            footerScore: "of Confined Space Type & nature of the Activity",
+            html: `
+            <tr>
+                <td colspan="11" class="highlight-yellow" style="padding:4px;"><b>Activity: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:red">**</span>This Risk Assessment <span style="color:blue;"><u>is based on the assumption that the vessel is isolated, depressurised/ purged and drained</u></span></b></td>
+            </tr>
+            <tr style="border-left: 3px solid red;">
+                <td style="text-align: center; vertical-align: middle;"><b>1.</b> Entering for Internal<br>Manual Cleaning &<br>Inspection</td>
+                <td style="text-align: center; vertical-align: middle;">Toxic atmosphere<br>Hydrocarbon <u>Presence</u><br><u>Insufficient</u> oxygen<br>atmospheres/<br>Asphyxiation<br>•<br>- Residue, sludge,<br>Work at height<br>•<br>Ignition sources present<br>within confined space<br>(static electricity, etc.) or<br>near the confined space</td>
+                <td style="text-align: center;">Major health effect -<br>Inhalation -<br>• Skin Burns<br>•Potential <u>Fatality,</u><br>•Fire/Explosion</td>
+                <td></td>
+                <td style="text-align: center;">• Confined Space Entry Procedure,<br>- PTW (CS entry Permit & Hot permit for<br>work)<br>- LOTO<br>"Positive Isolation in vessel (Blinding)<br>•<br>•Method<br>Statement, TBT, inspected <u>equipments.</u><br>Trained Competent Personnel<br>• Gas Testing at all level •<br>-Hole Watch/Standby Natural / Forced air<br>ventilation /air mover<br>•<br>Appropriate/Specific PPE<br>• Emergency Response •<br>Restricted entry, egress, • Fatigue<br>Management</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">B</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;">4</td>
+                <td style="text-align: center; font-weight: 900; font-size: 14px;" class="highlight-yellow">M</td>
+                <td class="action-items">- Breathing Protection Full face mask & may "SCBA") if<br>required after Atmosphere gas testing /assessment.<br><b><span style="color:red; font-weight:900;">**Confirm that all involved workers are</span> <span style="background-color:yellow; color:red; font-weight:900;">FIT TO WORK</span></b><br>No entry <u>to</u> be made unless atmosphere is proved to be of<br>breathable quality.<br><ul><li><span style="color:blue;">Ensure Gas Free atmosphere including potential pocket<br><u>gas presence</u></span></li></ul>**Gases freeing by Air driven mechanical Air mover<br>/Ventilation<br><ul><li><span style="color:red;">Do <u>an</u> gas/ oxygen test at all level and location to<br>confirm the acceptable entry conditions are present"</span></li></ul>Additional PPE to prevent<br>Skin Contact with Hazardous Material<br><u>(</u> Chemical disposal Suit/rain <u>coat , &</u> Gloves)<br><ul><li>Full body Harness with a <u>Life Line</u> should be worn (if<br>determined after gas test assessment)</li><li>Only Explosion Proof (<u>Atex)</u> electrical equipment is<br>permitted within the vessel,</li></ul>Direct means of communication <u>(auditory) to</u> be 100%<br>maintained between entrants and "hole watch",<br><ul><li>Avoid working for a prolonged <u>period of time</u>, and <u>Take</u><br>regular/often Breaks</li></ul>Internal lighting (24 V)<u>,</u><br><b>**Entrants know<br>the hazards that may be faced during entry including<br>information on the mode, signs or symptoms and<br>consequences of exposure.</b></td>
+                <td style="text-align: center;">HSE/ Foreman<br>& Workers</td>
+                <td style="text-align: center; font-weight:900;" class="highlight-yellow">M.<br><span style="font-size:9px; padding:2px; font-weight:normal; display:inline-block;">Reinforce control<br>measure<br>/recommendations<br>depending on internal<br>atmosphere<br>assessment /</span></td>
+            </tr>
+            <tr>
+                <td colspan="11" class="highlight-orange" style="text-align: center; font-weight: 900; padding: 4px;">Perform maintenance repair if required depending on inspection findings report (requires other PTW & Activity R.A)</td>
+            </tr>`
+        }
+    };
 
-    inputArea.addEventListener('input', (e) => {
-        displayArea.textContent = e.target.value || '\u00A0';
-    });
-
+    // Update logic for Dropdown
     inputType.addEventListener('change', (e) => {
-        displayType.textContent = "TO " + e.target.value;
+        const selectedValue = e.target.value;
+        const data = activityData[selectedValue];
+        
+        if (data) {
+            // Update Title Header
+            displayType.innerHTML = data.title;
+            // Update Main Sheet Body
+            mainTbody.innerHTML = data.html;
+            // Update the "Scores of..." portion of the Footer Note
+            footerRatingText.textContent = data.footerScore;
+        } else {
+            displayType.textContent = "TO " + selectedValue;
+            footerRatingText.textContent = "of C/S & WAH";
+            mainTbody.innerHTML = `<tr><td colspan="11" style="text-align:center; padding:15px;"><b>No specific hazard data mapped for this activity yet.</b></td></tr>`;
+        }
     });
 </script>
 
