@@ -167,7 +167,7 @@
        DISPLAY LOGIC (Screen vs Print)
        ======================================================= */
     @media screen {
-        /* .sheet-container { display: none !important; } */
+         .sheet-container { display: none !important; }
     }
     @media print {
         body { padding: 0; background-color: #fff; }
